@@ -1,0 +1,46 @@
+seed: 0
+delay: 1
+model: gpt-5-mini-2025-08-07
+max_tokens: 1024
+temperature: 1.0
+response_format:
+  type: "json_schema"
+  json_schema:
+    name: simple_similarity_judge
+    schema:
+      type: object
+      properties:
+        result:
+          type: object
+          properties:
+            selected_story:
+              type: string
+              description: Which story (A or B) is more similar to the anchor.
+              enum:
+                - A
+                - B
+            final_explanation:
+              type: string
+              description: A concise explanation comparing Story A and Story B to the anchor and explaining why the selected story is closer.
+          required:
+            - selected_story
+            - final_explanation
+      required:
+        - result
+      additionalProperties: false
+system_prompt: >-
+  You are an expert annotator specializing in narrative similarity. 
+  our goal is to determine which of two candidate stories (Story A or Story B) is most similar to an Anchor story.
+  
+user_prompt: |-
+  Here are the three stories:
+
+  Anchor Story:
+  {anchor_story}
+
+  Story A:
+  {story_a}
+
+  Story B:
+  {story_b}
+

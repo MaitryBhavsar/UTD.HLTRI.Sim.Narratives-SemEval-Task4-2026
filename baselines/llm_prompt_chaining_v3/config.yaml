@@ -1,0 +1,9 @@
+model: gpt-4o
+temperature: 0.2
+seed: 123
+min_delay_seconds: 0.0
+
+# Per-stage output budgets. These are upper bounds; shorter outputs are fine.
+stage1_max_tokens: 2048
+stage2_max_tokens: 4096
+stage3_max_tokens: 4096

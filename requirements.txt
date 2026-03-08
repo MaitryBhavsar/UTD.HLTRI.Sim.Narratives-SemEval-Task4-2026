@@ -1,0 +1,9 @@
+openai>=1.0.0
+PyYAML
+tenacity
+tqdm
+scikit-learn
+pandas==2.3.1
+sentence-transformers==5.0.0
+numpy
+torch

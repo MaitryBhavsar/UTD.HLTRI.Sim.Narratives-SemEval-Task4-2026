@@ -1,0 +1,81 @@
+seed: 0
+delay: 1
+model: gpt-5-mini-2025-08-07
+max_tokens: 1024
+temperature: 1.0
+response_format:
+  type: "json_schema"
+  json_schema:
+    name: contra_judge
+    schema:
+      type: object
+      properties:
+        result:
+          type: object
+          properties:
+            contra_reason:
+              type: object
+              properties:
+                theme:
+                  type: string
+                  description: The overarching theme of the story.
+                course:
+                  type: string
+                  description: The main course of events that unfold in the story.
+                outcomes:
+                  type: string
+                  description: The results of the events in the story.
+              required:
+                - theme
+                - course
+                - outomes
+            selected_story:
+              type: string
+              description: Indicates which story was more similar with the anchor story.
+              enum:
+                - A
+                - B
+            contributing_aspects:
+              type: array
+              description: Specific aspects of the story that influenced the final judgment.
+              items:
+                type: string
+                enum:
+                  - abstract_theme
+                  - course_of_action
+                  - outcomes
+            final_explanation:
+              type: string
+              description: A concise explanation summarizing the contrastive reasoning by highlighting which aspects made the selected story more similar with the anchor story.
+          required:
+            - selected_story
+            - contra_reason
+            - contributing_aspects
+            - final_explanation
+      required:
+        - result
+      additionalProperties: false
+system_prompt: >-
+  You are an expert annotator specializing in narrative similarity. 
+  Your goal is to determine which of two candidate stories (Story A or Story B) is most similar to an Anchor story based on three core aspects:
+  1. Abstract Theme: The defining constellation of problems, central ideas, and core motifs (excluding concrete setting).
+  2. Course of Action: The sequence of events, actions, conflicts, turning points, and the order in which they occur.
+  3. Outcomes: The results of the plot at the end of the text, for example, the conflict resolution, the characters' fates, moral lessons, etc. It does not cover intermediate statuses that change later in the story.
+  Instructions:
+  - Utilize contrastive reasoning to identify the most similar story, examples of contrastive reasoning are provided in demonstrations.
+  - Ignore: Writing style, concrete setting/time period, character and location names, text length and the level of detail in which events are described.
+  - It is important to consider each aspect independently. Often, pairs of stories that are similar in terms of course of action will also share an abstract theme. However, it is possible that similar events emerge from completely different surrounding circumstances. Outcomes, on the other hand, are clearly distinct from the other two aspects: practically identical events in stories with comparable abstract themes can result in polar opposite outcomes.
+  - When comparing abstract themes, it can help to explicitly formulate them. Two stories share a general theme if there is a description that captures the defining circumstances of both stories.
+  - You should focus on the core aspects of stories, potentially largely ignoring side storylines. How you weigh the individual factors should be based on your intuitive impression of which aspects you consider crucial to the overall similarity of the specific stories.
+user_prompt: |-
+  Here are the three stories:
+
+  Anchor Story:
+  {anchor_story}
+
+  
+  Story A:
+  {story_a}
+
+  Story B:
+  {story_b}
